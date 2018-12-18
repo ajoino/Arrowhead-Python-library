@@ -1,0 +1,18 @@
+{
+  "providedService" : {
+    "serviceDefinition" : "",
+    "interfaces" : [ "JSON", "XML" ],
+    "serviceMetadata" : {
+      
+    }
+  },
+  "provider" : {
+    "systemName" : "",
+    "address" : "0.0.0.0",
+    "port" : 0
+  },
+  "serviceURI" : "",
+  "version" : 1,
+  "udp" : false,
+  "ttl" : 0
+} 
