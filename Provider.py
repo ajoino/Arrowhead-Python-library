@@ -1,6 +1,8 @@
 import json
 import aiohttp
 import asyncio
+import ServiceFinder
+import ArrowheadJson
 
 class Provider:
     def __init__(self, name, definition, uri, port, address, interfaces, serviceregistryURL, metadata):
@@ -11,7 +13,9 @@ class Provider:
         self.interfaces = interfaces
         self.address = address
         self.metadata = metadata
-        self.serviceregistryURL = "http://" + serviceregistryURL + "/serviceregistry"
+        self.serviceregistryURL = "http://" + ServiceFinder.getInsecureServiceRegistry() + "/serviceregistry"
+        self.orchestratorURL = ServiceFinder.getInsecureOrchestrator()
+        self.authorizationURL = ServiceFinder.getInsecureAuthorization()
         self.data= self.createJSONdata()
 
     """Publishing the service to the ServiceRegister"""
@@ -23,8 +27,6 @@ class Provider:
                     if (resp.status == 201):
                         print("Service was registred to the service register")
                         print(await resp.json())
-                        await self.registerToStore()
-                        await self.registerToAuthorization()
                     if (resp.status == 400):
                         print("Error: Service already exist")
                         print(await resp.json())
@@ -38,22 +40,24 @@ class Provider:
                     print ("Service was unpublished from the register")
                 else:
                     print ("Something went wrong. No message was received.")
+                    return
 
 
-    async def registerToStore(self):
+    async def registerToOrchestrator(self, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):     
         async with aiohttp.ClientSession() as session:
-            
-            data = "["+json.dumps(self.getData()) +"]" #Needs to be converted to a Java Array
+            orchestrationData = ArrowheadJson.createOrchestratorData(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo, self.name, self.address, self.port, self.definition, self.interfaces, self.metadata)
+            data = "["+json.dumps(orchestrationData) +"]" #Needs to be converted to a Java Array because thats what the arrowhead core wants... suck...
             jsonData = json.loads(data)
             print(jsonData)
-            async with session.post("http://localhost:8440/orchestrator/mgmt/store", json=jsonData) as resp:
+            async with session.post("http://"+ self.orchestratorURL +"/orchestrator/mgmt/store", json=jsonData) as resp:
                 print (resp.status)
                 print (await resp.json())
+                
 
     async def registerToAuthorization(self):
         async with aiohttp.ClientSession() as session:
             data = self.authorizationData()
-            async with session.post("http://localhost:8444/authorization/mgmt/intracloud", json=data) as resp:
+            async with session.post("http://" + self.authorizationURL + "/authorization/mgmt/intracloud", json=data) as resp:
                 print (resp.status)
                 print (await resp.json())
                 
@@ -126,12 +130,13 @@ class Provider:
             return data
 
     def start(self):
-        
         loop.run_until_complete(self.publish())
 
-    async def stop(self):
-        await self.unpublish()
+    def stop(self):
+        loop.run_until_complete(self.unpublish())
 
+    def registerConsumer(self, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):
+        loop.run_until_complete(self.registerToOrchestrator(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo))
         
         
 

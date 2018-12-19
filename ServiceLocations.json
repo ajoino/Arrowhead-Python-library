@@ -1,0 +1,17 @@
+{
+	"orchestrator":  {
+		"insecure_port": 8440,
+		"url": "127.0.0.1"
+	},
+	
+	"service_registry":  {
+		"insecure_port": 8442,
+		"url": "127.0.0.1"
+	},
+	
+	"authorization":  {
+		"insecure_port": 8444,
+		"url": "127.0.0.1"
+	}
+	
+}
