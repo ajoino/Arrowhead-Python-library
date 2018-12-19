@@ -7,7 +7,7 @@ import asyncio
 provider = Provider.Provider("CurrentTimeSweden", "CurrentTime","/", 8080, "127.0.0.1", ["JSON"] ,"127.0.0.1:8442", {})
 provider.start()
 #provider.registerToOrch()
-provider.registerConsumer("emilsnya", "127.0.0.1", 8082, "null")
+provider.register_consumer("emilsnya", "127.0.0.1", 8082, "null")
 
 async def handle_request(request):
     try:          

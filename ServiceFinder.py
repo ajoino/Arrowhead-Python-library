@@ -1,6 +1,6 @@
 import json
 
-def getInsecureServiceRegistry():
+def get_insecure_service_registry():
     with open('ServiceLocations.json') as file:
         data = json.load(file)
         serviceRegistry = data['service_registry']
@@ -9,7 +9,7 @@ def getInsecureServiceRegistry():
         fullUrl = url + ":" + str(port)
         return fullUrl
 
-def getInsecureOrchestrator():
+def get_insecure_orchestrator():
     with open('ServiceLocations.json') as file:
         data = json.load(file)
         orchestrator = data['orchestrator']
@@ -18,7 +18,7 @@ def getInsecureOrchestrator():
         fullUrl = url + ":" + str(port)
         return fullUrl
 
-def getInsecureAuthorization():
+def get_insecure_authorization():
     with open('ServiceLocations.json') as file:
         data = json.load(file)
         auth = data['authorization']

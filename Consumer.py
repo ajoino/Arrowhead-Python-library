@@ -9,7 +9,7 @@ class Consumer:
         
 
 
-    async def consumeService(self, providerUrl):
+    async def consume_service(self, providerUrl):
         async with aiohttp.ClientSession() as session:
             async with session.get(providerUrl) as resp:
                 data = (await resp.read())
@@ -17,7 +17,7 @@ class Consumer:
                 print(jsonData)
                 return jsonData
 
-    async def orchestrationRequest(self, serviceDefinition):
+    async def orchestration_request(self, serviceDefinition):
         async with aiohttp.ClientSession() as session:
             async with session.get(self.orchestrator + "orchestrator/store/consumername/" + self.name + "/servicedef/" + serviceDefinition) as resp:
                 data = json.loads(await resp.read())        
@@ -32,6 +32,6 @@ class Consumer:
                 
 consumer = Consumer("emilsnya")
 loop = asyncio.get_event_loop()
-g = loop.run_until_complete(consumer.orchestrationRequest("CurrentTime"))
-loop.run_until_complete(consumer.consumeService(g))
+g = loop.run_until_complete(consumer.orchestration_request("CurrentTime"))
+loop.run_until_complete(consumer.consume_service(g))
 loop.close()
