@@ -24,6 +24,7 @@ class Provider:
                         print("Service was registred to the service register")
                         print(await resp.json())
                         await self.registerToStore()
+                        await self.registerToAuthorization()
                     if (resp.status == 400):
                         print("Error: Service already exist")
                         print(await resp.json())
@@ -48,7 +49,38 @@ class Provider:
             async with session.post("http://localhost:8440/orchestrator/mgmt/store", json=jsonData) as resp:
                 print (resp.status)
                 print (await resp.json())
+
+    async def registerToAuthorization(self):
+        async with aiohttp.ClientSession() as session:
+            data = self.authorizationData()
+            async with session.post("http://localhost:8444/authorization/mgmt/intracloud", json=data) as resp:
+                print (resp.status)
+                print (await resp.json())
                 
+
+    def authorizationData(self):
+        with open('auth_entry.json') as file:
+            data = json.load(file)
+            consumer = data['consumer']
+
+            consumer['systemName'] = "Test1"
+            consumer['address'] = "localhost"
+            consumer['port'] = 8083
+
+            providerList = data['providerList'][0]
+
+            providerList['systemName'] = "CurrenTimeSweden"
+            providerList['address'] = "localhost"
+            providerList['port'] = 8080
+
+
+            serviceList = data['serviceList'][0]
+            serviceList['serviceDefinition'] = "CurrentTime"
+
+            data['serviceMetadata'] = ""
+            
+            print(data)
+            return data
     
     def getData(self):
         with open('storeEntry.json') as file:
@@ -60,14 +92,16 @@ class Provider:
             service['serviceMetadata'] = self.metadata
 
             consumer = data['consumer']
-            consumer['systemName'] = "EmilTest"
+            consumer['systemName'] = "emilsnya"
             consumer['address'] = "localhost"
-            consumer['port'] = 8080
+            consumer['port'] = 8082
 
             providerSystem = data['providerSystem']
             providerSystem['systemName'] = self.name
             providerSystem['address'] = self.address
             providerSystem['port'] = 8080
+
+            
             print(data)
             return data
     
@@ -102,10 +136,3 @@ class Provider:
         
 
 loop = asyncio.get_event_loop()
-#loop = asyncio.get_event_loop()
-#print(json.loads('{"gg" : "cool"}'))
-#test = Provider("Test", "gg","123", 8040, "127.0.0.1", ["KUL", "KILLE"] ,"127.0.0.1:8442", {"apa": "djur", "bil": "Ford"})
-#print (test.serviceregistryURL)
-#loop = asyncio.get_event_loop()
-#loop.run_until_complete(test.publish())
-#loop.close()
