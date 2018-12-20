@@ -73,17 +73,13 @@ def createIntraCloudAuthRequestData(consumerSystemName,
                                 providerSystemName,
                                 providerAddress,
                                 providerPort,
-                                serviceDefinition,
-                                interfaces,
-                                metadata):
+                                serviceDefinition):
     
     with open('IntraCloudAuthRequest.json') as file:
             data = json.load(file)
             print (data)
             service = data['service']
             service['serviceDefinition'] = serviceDefinition
-            service['interfaces'] = interfaces
-            service['serviceMetadata'] = metadata
 
             consumer = data['consumer']
             consumer['systemName'] = consumerSystemName

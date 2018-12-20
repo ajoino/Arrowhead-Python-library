@@ -1,6 +1,8 @@
 import json
 import aiohttp
 import asyncio
+import ServiceFinder
+
 
 class Consumer:
     def __init__(self, name, address, port):
@@ -31,7 +33,7 @@ class Consumer:
                 return fullAddress
 
                 
-#consumer = Consumer("emilsnya")
+#consumer = Consumer("emilsnya", "127.0.0.1", 8082)
 #loop = asyncio.get_event_loop()
 #g = loop.run_until_complete(consumer.orchestration_request("CurrentTime"))
 #loop.run_until_complete(consumer.consume_service(g))

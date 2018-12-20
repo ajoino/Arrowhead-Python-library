@@ -4,6 +4,7 @@ import asyncio
 import ArrowheadJson
 import ServiceFinder
 import Provider
+import Authorization
 
 orchestratorURL = ServiceFinder.get_insecure_orchestrator() #The location of the orchestrator
 
@@ -23,12 +24,24 @@ async def _orchestration_request(consumer, serviceDefinition):
         async with session.get("http://" + orchestratorURL + "/orchestrator/store/consumername/" + consumer.name + "/servicedef/" + serviceDefinition) as resp:
             data = json.loads(await resp.read())        
             responseJson = (data[0])
+            
             providerSystem = responseJson['providerSystem']
+
+            systemName = providerSystem['systemName']
             address = providerSystem['address']
             port = providerSystem['port']
-            fullAddress = "http://" + address + ":" + str(port)
-            print(fullAddress)
-            return fullAddress
+            
+            authorized = Authorization.authorize(consumer, systemName, address, port, serviceDefinition) #Authorization conrol
+
+            if authorized:
+                fullAddress = "http://" + address + ":" + str(port)
+                print(fullAddress)
+                return fullAddress
+
+            else:
+                raise Exception("System is not authrized")
+            
+            
 
 """ A consumer can be registred to the orchestrator for allowing the consumer to find the service provider  """
 def register_to_orchestrator(provider, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):
