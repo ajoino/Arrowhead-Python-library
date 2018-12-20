@@ -55,10 +55,10 @@ class Provider:
                 print (await resp.json())
                 
                 
-    async def _register_to_authorization(self):
+    async def _register_to_authorization(self, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):  
         async with aiohttp.ClientSession() as session:
-            data = self.authorizationData()
-            async with session.post("http://" + self.authorizationURL + "/authorization/mgmt/intracloud", json=data) as resp:
+            authorizationData = ArrowheadJson.createAuthorizationData(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo, self.name, self.address, self.port, self.definition, self.interfaces, self.metadata)
+            async with session.post("http://" + self.authorizationURL + "/authorization/mgmt/intracloud", json=authorizationData) as resp:
                 print (resp.status)
                 print (await resp.json())
                 
@@ -94,6 +94,7 @@ class Provider:
     def register_consumer(self, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):
         loop.run_until_complete(self._register_to_orchestrator(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo))
         
-        
+    def register_to_authorization(self, consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo):
+        loop.run_until_complete(self._register_to_authorization(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo))
 
 loop = asyncio.get_event_loop()

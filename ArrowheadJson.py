@@ -21,7 +21,7 @@ def createAuthorizationData(consumerSystemName,
 
             providerList = data['providerList'][0]
 
-            providerList['systemName'] = providerSytemName
+            providerList['systemName'] = providerSystemName
             providerList['address'] = providerAddress
             providerList['port'] = providerPort
 
@@ -66,4 +66,37 @@ def createOrchestratorData(consumerSystemName,
             providerSystem['port'] = providerPort
             print (data)
             return data
+
+def createIntraCloudAuthRequestData(consumerSystemName,
+                                consumerAddress,
+                                consumerPort,
+                                providerSystemName,
+                                providerAddress,
+                                providerPort,
+                                serviceDefinition,
+                                interfaces,
+                                metadata):
+    
+    with open('IntraCloudAuthRequest.json') as file:
+            data = json.load(file)
+            print (data)
+            service = data['service']
+            service['serviceDefinition'] = serviceDefinition
+            service['interfaces'] = interfaces
+            service['serviceMetadata'] = metadata
+
+            consumer = data['consumer']
+            consumer['systemName'] = consumerSystemName
+            consumer['address'] = consumerAddress
+            consumer['port'] = consumerPort
+
+            providerSystem = data['providers'][0]
+            providerSystem['systemName'] = providerSystemName
+            providerSystem['address'] = providerAddress
+            providerSystem['port'] = providerPort
+            print (data)
+            return data
+
+
+
     

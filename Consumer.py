@@ -3,9 +3,10 @@ import aiohttp
 import asyncio
 
 class Consumer:
-    def __init__(self, name):
-        self.name = name
-        self.orchestrator = "http://127.0.0.1:8440/"
+    def __init__(self, name, address, port):
+        self.systemName = name
+        self.address = address
+        self.port = port
         
 
 
@@ -30,8 +31,8 @@ class Consumer:
                 return fullAddress
 
                 
-consumer = Consumer("emilsnya")
-loop = asyncio.get_event_loop()
-g = loop.run_until_complete(consumer.orchestration_request("CurrentTime"))
-loop.run_until_complete(consumer.consume_service(g))
-loop.close()
+#consumer = Consumer("emilsnya")
+#loop = asyncio.get_event_loop()
+#g = loop.run_until_complete(consumer.orchestration_request("CurrentTime"))
+#loop.run_until_complete(consumer.consume_service(g))
+#loop.close()
