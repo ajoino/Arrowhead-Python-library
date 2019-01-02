@@ -5,26 +5,26 @@ from aiohttp import web
 import asyncio
 import Orchestrator
 import Authorization
-import Consumer
+
+""" Creating a new service provider object.  """
+provider = Provider.Provider("CurrentTimeSweden", "CurrentTime","/", 8080, "127.0.0.1", ["JSON"] ,"127.0.0.1:8442", {})
+
+""" Adding the provider to the orchestrator with a specific consumer.  """
+Orchestrator.register_to_orchestrator(provider, "test_consumer", "127.0.0.1", 8081, "null")
+
+""" Publishing the service to the service registry.  """
+provider.start()
 
 
-consumer = Consumer.Consumer("emilsnyaste", "127.0.0.1", 8082)
-provider = Provider.Provider("CurrentTimeSweden", "CurrentTime","/", 8081, "127.0.0.1", ["JSON"] ,"127.0.0.1:8442", {})
-#Authorization.register_to_authorization(provider,"emilsnyaste", "127.0.0.1", 8082, "null")
-
-print(Authorization.authorize(consumer, provider.name, provider.address, provider.port, provider.definition))
-#provider.start()
-#provider.registerToOrch()
-#Orchestrator.register_to_orchestrator(provider, "emilsnya", "127.0.0.1", 8082, "null")
-
+""" The application to be runned. This is a basic web application that returns the current time in JSON format.  """
 async def handle_request(request):
     try:          
         time = str(datetime.now())
         response = {'time':time}
-        print (response)
-        provider.stop()
+        await(provider.stop())
         return web.Response(text=json.dumps(response), status=200)
     except Exception as e:
+        print(e)
         return web.Response(text=json.dumps({'message': 'Something went wrong'}), status=400)
 
 
@@ -32,9 +32,4 @@ async def handle_request(request):
 
 app = web.Application()
 app.router.add_get('/', handle_request)
-
 web.run_app(app)
-
-
-
-

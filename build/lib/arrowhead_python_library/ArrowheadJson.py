@@ -32,6 +32,7 @@ def createAuthorizationData(consumerSystemName,
 
             data['serviceMetadata'] = ""
             
+            print(data)
             return data
 
 
@@ -48,6 +49,7 @@ def createOrchestratorData(consumerSystemName,
     
     with open('storeEntry.json') as file:
             data = json.load(file)
+            print (data)
             service = data['service']
             service['serviceDefinition'] = serviceDefinition
             service['interfaces'] = interfaces
@@ -62,6 +64,7 @@ def createOrchestratorData(consumerSystemName,
             providerSystem['systemName'] = providerSystemName
             providerSystem['address'] = providerAddress
             providerSystem['port'] = providerPort
+            print (data)
             return data
 
 def createIntraCloudAuthRequestData(consumerSystemName,
@@ -87,6 +90,7 @@ def createIntraCloudAuthRequestData(consumerSystemName,
             providerSystem['systemName'] = providerSystemName
             providerSystem['address'] = providerAddress
             providerSystem['port'] = providerPort
+            print (data)
             return data
 
 
