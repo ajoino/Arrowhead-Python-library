@@ -19,6 +19,12 @@ class Provider:
         self.authorizationURL = ServiceFinder.get_insecure_authorization()
         self.data= self._create_json_data()
 
+    def __enter__(self):
+        self.start()
+
+    async def __exit__(self, exc_type, exc_val, traceback):
+        await self.stop()
+        
     """Publishing the service provider to the ServiceRegister"""
     async def publish(self):
             async with aiohttp.ClientSession() as session:
