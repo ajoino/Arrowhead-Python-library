@@ -11,14 +11,12 @@ async def _register_to_authorization(provider, consumerSystemName, consumerAddre
         async with aiohttp.ClientSession() as session:
             authorizationData = ArrowheadJson.createAuthorizationData(consumerSystemName, consumerAddress, consumerPort, consumerAuthenticationInfo, provider.name, provider.address, provider.port, provider.definition, provider.interfaces, provider.metadata)
             async with session.post("http://" + authorizationURL + "/authorization/mgmt/intracloud", json=authorizationData) as resp:
-                print (resp.status)
-                print (await resp.json())
+                print ("Authorization rule added for provider " + provider.name)
 
 async def _authorize(consumer, providerName, providerAddress, providerPort, servicedefinition):
         async with aiohttp.ClientSession() as session:
             authorizationData = ArrowheadJson.createIntraCloudAuthRequestData(consumer.systemName, consumer.address, consumer.port, providerName, providerAddress, providerPort, servicedefinition)
             async with session.put("http://" + authorizationURL + "/authorization/intracloud", json=authorizationData) as resp:
-                print (resp.status)
                 data = await resp.json()
                 if resp.status == 404:
                         raise Exception("Consumer System is not in the authorization database.")
