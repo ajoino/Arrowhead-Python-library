@@ -1,11 +1,16 @@
-import Consumer
+"Change path to find the libraries"
+import sys
+sys.path.append('..')
+
+"Normal imports"
+from ..source.Consumer import Consumer
 from datetime import datetime
 import json
 from aiohttp import web
 import aiohttp
 import asyncio
-import Orchestrator
-import Authorization
+#from .source.Orchestrator import Orchestrator
+#import Authorization
 
 """ Creating a new consumer.  """
 consumer = Consumer.Consumer("test_consumer", "127.0.0.1", 8081)
