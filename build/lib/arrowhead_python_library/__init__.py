@@ -1,1 +1,0 @@
-name = "arrowhead-python-library"
