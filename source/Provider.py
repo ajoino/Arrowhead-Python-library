@@ -1,3 +1,10 @@
+import sys, os
+
+home_dir = os.environ['HOME']
+source_dir = home_dir + '/Arrowhead-Python-library/source/'
+sys.path.append(home_dir + '/Arrowhead-Python-library/source/')
+
+#Regular imports
 import json
 import aiohttp
 import asyncio
@@ -24,18 +31,18 @@ class Provider:
 
     async def __exit__(self, exc_type, exc_val, traceback):
         await self.stop()
-        
+
     """Publishing the service provider to the ServiceRegister"""
     async def publish(self):
-            async with aiohttp.ClientSession() as session:
-                async with session.post(self.serviceregistryURL + '/register', json=self.data) as resp:
-                    if (resp.status == 201):
-                        print("Service was registred to the service register")
-                        return True
+        async with aiohttp.ClientSession() as session:
+            async with session.post(self.serviceregistryURL + '/register', json=self.data) as resp:
+                if (resp.status == 201):
+                    print("Service was registred to the service register")
+                    return True
                     if (resp.status == 400):
                         print("Error: Service already exist")
                         return False
-                    
+
 
     """Unpublishing the service provider from the service register"""
     async def unpublish(self):
@@ -47,11 +54,11 @@ class Provider:
                 else:
                     print ("This service is not in the registry")
                     return False
-                
-    
+
+
     """ Converts the provider to JSON-format  """
     def _create_json_data(self):
-        with open('ServiceRegistryEntry.json') as file:
+        with open(source_dir + 'ServiceRegistryEntry.json') as file:
             data = json.load(file)
 
             providedService = data['providedService']

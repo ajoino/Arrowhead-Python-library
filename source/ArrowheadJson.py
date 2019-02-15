@@ -1,3 +1,10 @@
+import sys, os
+
+home_dir = os.environ['HOME']
+source_dir = home_dir + '/Arrowhead-Python-library/source/'
+sys.path.append(home_dir + '/Arrowhead-Python-library/source/')
+
+
 import json
 def createAuthorizationData(consumerSystemName,
                                 consumerAddress,
@@ -10,7 +17,7 @@ def createAuthorizationData(consumerSystemName,
                                 interfaces,
                                 metadata):
     
-    with open('auth_entry.json') as file:
+    with open(source_dir + 'auth_entry.json') as file:
             data = json.load(file)
             consumer = data['consumer']
 
@@ -46,7 +53,7 @@ def createOrchestratorData(consumerSystemName,
                                 interfaces,
                                 metadata):
     
-    with open('storeEntry.json') as file:
+    with open(source_dir + 'storeEntry.json') as file:
             data = json.load(file)
             service = data['service']
             service['serviceDefinition'] = serviceDefinition
@@ -72,7 +79,7 @@ def createIntraCloudAuthRequestData(consumerSystemName,
                                 providerPort,
                                 serviceDefinition):
     
-    with open('IntraCloudAuthRequest.json') as file:
+    with open(source_dir + 'IntraCloudAuthRequest.json') as file:
             data = json.load(file)
             print (data)
             service = data['service']
